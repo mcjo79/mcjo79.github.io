@@ -9,7 +9,6 @@
   var privacyUrl = document.documentElement.getAttribute('data-privacy') || 'privacy/';
   var banner = null;
   var stateEl = null;
-  var gaLoaded = false;
   // Tag Assistant / GTM debug. This only enables GA4 debug output and re-opens the
   // banner for testing; it is NEVER treated as consent.
   var debugMode = /[?&](gtm_debug|ga_debug|debug_mode)(=|&|$)/.test(location.search);
@@ -17,7 +16,7 @@
   var copy = isFr ? {
     title: 'Cookies et mesure d’audience',
     body: 'Ce site utilise Google Analytics 4 uniquement pour mesurer son audience et améliorer le site. ' +
-          'Aucun cookie de mesure n’est déposé et aucun script Google n’est chargé avant votre accord.',
+          'Aucun cookie de mesure n’est déposé avant votre accord.',
     accept: 'Accepter',
     refuse: 'Refuser',
     more: 'En savoir plus',
@@ -26,7 +25,7 @@
   } : {
     title: 'Cookies and audience measurement',
     body: 'This site uses Google Analytics 4 only to measure its audience and improve the site. ' +
-          'No analytics cookie is set and no Google script is loaded before you agree.',
+          'No analytics cookie is set before you agree.',
     accept: 'Accept',
     refuse: 'Decline',
     more: 'Learn more',
@@ -90,9 +89,8 @@
     }
   }
 
-  function loadGa() {
-    if (gaLoaded) return;
-    gaLoaded = true;
+  function grantGa() {
+    window['ga-disable-' + GA_ID] = false;
     ensureGtag();
     gtag('consent', 'update', {
       ad_storage: 'denied',
@@ -100,23 +98,6 @@
       ad_personalization: 'denied',
       analytics_storage: 'granted'
     });
-    gtag('js', new Date());
-
-    // github.io is a public suffix: with GA's "auto" cookie domain, Chrome rejects the
-    // first Domain=github.io write. Pin the cookie domain to the actual host.
-    // cookie_expires: 0 makes them session cookies; this also avoids GA's delete+refresh
-    // write, which triggers Chrome's "expires attribute overwritten" warning.
-    var host = location.hostname;
-    var isIp = /^[\d.]+$/.test(host) || host.indexOf(':') !== -1;
-    var config = { anonymize_ip: true, cookie_expires: 0 };
-    if (host && host !== 'localhost' && !isIp) config.cookie_domain = host;
-    if (debugMode) config.debug_mode = true;
-    gtag('config', GA_ID, config);
-
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
-    document.head.appendChild(s);
   }
 
   function revokeGa(includeGeneric) {
@@ -165,29 +146,25 @@
 
   function choose(value) {
     var previous = readConsent();
+    var wasGranted = previous && previous.value === 'granted';
     writeConsent(value);
     updateState(value);
     hideBanner();
 
     if (value === 'granted') {
-      window['ga-disable-' + GA_ID] = false;
-      ensureGtag();
-      gtag('consent', 'update', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: 'granted'
-      });
-      loadGa();
+      grantGa();
+      if (!wasGranted) {
+        // The first page view was sent with analytics_storage=denied (cookieless).
+        // Send one now that storage is allowed, so this visit is counted normally.
+        gtag('event', 'page_view', {
+          page_location: location.href,
+          page_title: document.title
+        });
+      }
       return;
     }
 
-    var wasGranted = (previous && previous.value === 'granted') || gaLoaded;
-    revokeGa(wasGranted || gaLoaded);
-    if (wasGranted && gaLoaded) {
-      // Recharger pour retirer complètement le script Google déjà chargé.
-      window.setTimeout(function () { window.location.reload(); }, 80);
-    }
+    revokeGa(wasGranted);
   }
 
   function buildBanner() {
@@ -224,18 +201,10 @@
 
   function init() {
     ensureGtag();
-    // Consent Mode v2 : tout est refusé par défaut, avant même le chargement de gtag.js.
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied'
-    });
-
     buildBanner();
     var consent = readConsent();
     if (consent && consent.value === 'granted') {
-      loadGa();
+      grantGa();
       if (debugMode) showBanner(false);
     } else if (!consent) {
       showBanner(false);

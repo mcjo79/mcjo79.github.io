@@ -25,15 +25,16 @@ whose site lives in the `vroid-mcp` repository.
 └── .nojekyll
 ```
 
-No build step, no framework, no external font. **Google Analytics 4 (`G-2NDE82V29F`) is loaded only after consent**:
-`consent.js` defaults Consent Mode v2 to `denied`, loads `gtag.js` only after **Accept**, and removes the analytics
-cookies on refusal. The choice is stored for 180 days in `localStorage` (`vroid-consent-v1`) and is shared with the
-project site on the same domain. GA4 uses session cookies (`cookie_expires: 0`) and the cookie domain is pinned to
-the current host to avoid the `github.io` public-suffix rejection.
+No build step, no framework, no external font. **Google Analytics 4 (`G-2NDE82V29F`) runs in advanced consent mode**:
+`gtag-init.js` loads the Google tag immediately with every consent signal `denied`; no analytics cookie or identifier
+is stored before **Accept**, but Google may receive a cookieless measurement request. `consent.js` then updates
+`analytics_storage` and removes the analytics cookies on refusal. The choice is stored for 180 days in `localStorage`
+(`vroid-consent-v1`) and is shared with the project site on the same domain. GA4 uses session cookies
+(`cookie_expires: 0`) and the cookie domain is pinned to the current host to avoid the `github.io` public-suffix rejection.
 
 Debugging: adding `?gtm_debug=...`, `?ga_debug=1` or `?debug_mode=1` enables GA4 `debug_mode` and re-opens the
-consent banner, so Tag Assistant/DebugView can test the flow. **It never grants consent** — without an existing
-accepted choice, no Google script is loaded.
+consent banner, so Tag Assistant/DebugView can test the flow. **It never grants consent** — without an accepted
+choice, no analytics cookie or identifier is stored and `analytics_storage` stays denied.
 
 ## Local preview
 

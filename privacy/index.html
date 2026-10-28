@@ -28,6 +28,8 @@
       } catch (e) {}
     })();
   </script>
+  <script src="../assets/js/gtag-init.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2NDE82V29F"></script>
   <script src="../assets/app.js" defer></script>
   <script src="../assets/js/consent.js" defer></script>
 </head>
@@ -83,19 +85,22 @@
         If your request contains sensitive information, ask for a private channel first; GitHub issues are public.</p>
 
       <h2>Audience measurement</h2>
-      <p><strong>Only if you accept</strong>, Google Analytics 4 collects:</p>
+      <p>Google Analytics 4 is loaded with every consent signal set to <strong>denied</strong>. In that state it does
+        not create an analytics cookie or store an identifier on your device, but Google may receive a cookieless
+        measurement request. Nothing is stored for analytics before you accept.</p>
+      <p><strong>After you accept</strong>, Google Analytics 4 collects:</p>
       <ul>
         <li>the pages you visit, the referring page and the links you click;</li>
         <li>approximate location derived from your IP address (country, region or city);</li>
-        <li>technical information: device, operating system, browser, language and screen size;</li>
+        <li>technical information: device type, operating system, browser, language and screen size;</li>
         <li>interaction events such as scroll depth or outbound clicks;</li>
         <li>a random identifier stored in a cookie to recognise a returning browser.</li>
       </ul>
       <p>No name, email address or account is requested. <strong>No project file, model or image is sent to this site.</strong>
         Google Analytics 4 does not log or store individual IP addresses, according to Google: the IP address is used
         to derive the approximate location and then discarded.</p>
-      <p>If you decline, <strong>no Google Analytics script is loaded and no analytics request is made</strong>.
-        Only your choice and theme preference are kept locally in your browser.</p>
+      <p>If you decline, <code>analytics_storage</code> remains denied: no analytics cookie is created and no identifier
+        is kept. Only your choice and theme preference are stored locally in your browser.</p>
 
       <h2>Cookies</h2>
       <p>No analytics cookie is set before you press <strong>Accept</strong>. After consent, Google Analytics 4 sets:</p>

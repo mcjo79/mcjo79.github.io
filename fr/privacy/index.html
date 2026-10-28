@@ -28,6 +28,8 @@
       } catch (e) {}
     })();
   </script>
+  <script src="../../assets/js/gtag-init.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2NDE82V29F"></script>
   <script src="../../assets/app.js" defer></script>
   <script src="../../assets/js/consent.js" defer></script>
 </head>
@@ -83,7 +85,10 @@
         Si votre demande contient des informations sensibles, demandez d’abord un canal privé : les issues GitHub sont publiques.</p>
 
       <h2>Mesure d’audience</h2>
-      <p><strong>Uniquement si vous acceptez</strong>, Google Analytics 4 collecte :</p>
+      <p>Google Analytics 4 est chargé avec tous les signaux de consentement en <strong>« refusé »</strong>. Dans cet état,
+        il ne crée aucun cookie de mesure et ne stocke aucun identifiant sur votre appareil, mais Google peut recevoir une
+        requête de mesure sans cookie. Rien n’est stocké pour la mesure avant votre accord.</p>
+      <p><strong>Après votre accord</strong>, Google Analytics 4 collecte :</p>
       <ul>
         <li>les pages consultées, la page d’origine et les liens cliqués ;</li>
         <li>une localisation approximative déduite de votre adresse IP (pays, région ou ville) ;</li>
@@ -94,8 +99,8 @@
       <p>Aucun nom, aucune adresse e-mail et aucun compte ne sont demandés. <strong>Aucun fichier de projet, modèle ou image
         n’est envoyé à ce site.</strong> Selon Google, Google Analytics 4 ne journalise ni ne conserve les adresses IP
         individuelles : l’adresse IP sert à déduire la localisation approximative, puis est écartée.</p>
-      <p>Si vous refusez, <strong>aucun script Google Analytics n’est chargé et aucune requête de mesure n’est effectuée</strong>.
-        Seuls votre choix et votre préférence de thème restent stockés localement dans votre navigateur.</p>
+      <p>Si vous refusez, <code>analytics_storage</code> reste refusé : aucun cookie de mesure n’est créé et aucun identifiant
+        n’est conservé. Seuls votre choix et votre préférence de thème restent stockés localement dans votre navigateur.</p>
 
       <h2>Cookies</h2>
       <p>Aucun cookie de mesure n’est déposé avant que vous cliquiez sur <strong>Accepter</strong>. Après consentement,
