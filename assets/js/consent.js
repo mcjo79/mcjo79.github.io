@@ -203,14 +203,17 @@
     ensureGtag();
     buildBanner();
     var consent = readConsent();
-    if (consent && consent.value === 'granted') {
+    if (consent && consent.value === 'granted' && !debugMode) {
       grantGa();
-      if (debugMode) showBanner(false);
+    } else if (debugMode) {
+      showBanner(false);
+      // In debug, a stored "granted" is intentionally not applied; don't claim
+      // it is active in the banner either.
+      if (consent && consent.value === 'granted') updateState(null);
     } else if (!consent) {
       showBanner(false);
     } else {
       updateState('denied');
-      if (debugMode) showBanner(false);
     }
 
     document.addEventListener('click', function (event) {

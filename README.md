@@ -33,8 +33,9 @@ is stored before **Accept**, but Google may receive a cookieless measurement req
 (`cookie_expires: 0`) and the cookie domain is pinned to the current host to avoid the `github.io` public-suffix rejection.
 
 Debugging: adding `?gtm_debug=...`, `?ga_debug=1` or `?debug_mode=1` enables GA4 `debug_mode` and re-opens the
-consent banner, so Tag Assistant/DebugView can test the flow. **It never grants consent** — without an accepted
-choice, no analytics cookie or identifier is stored and `analytics_storage` stays denied.
+consent banner. In this mode a stored `granted` choice is deliberately **ignored** so Tag Assistant starts from the
+`denied` default and sees the real update only after the Accept click. **The parameter never grants consent by
+itself** — without that click, no analytics cookie or identifier is stored and `analytics_storage` stays denied.
 
 ## Local preview
 

@@ -18,16 +18,19 @@
   });
 
   // Restore an existing choice before the first hit, so returning visitors who
-  // already accepted are measured with cookies.
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var saved = JSON.parse(raw);
-      if (saved && saved.value === 'granted' && saved.expires && saved.expires > Date.now()) {
-        gtag('consent', 'update', { analytics_storage: 'granted' });
+  // already accepted are measured with cookies. In debug mode we deliberately
+  // start from the default (denied) so Tag Assistant can test the real click.
+  if (!debugMode) {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var saved = JSON.parse(raw);
+        if (saved && saved.value === 'granted' && saved.expires && saved.expires > Date.now()) {
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+        }
       }
-    }
-  } catch (e) {}
+    } catch (e) {}
+  }
 
   gtag('js', new Date());
 
