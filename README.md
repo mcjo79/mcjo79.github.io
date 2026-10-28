@@ -31,6 +31,10 @@ cookies on refusal. The choice is stored for 180 days in `localStorage` (`vroid-
 project site on the same domain. GA4 uses session cookies (`cookie_expires: 0`) and the cookie domain is pinned to
 the current host to avoid the `github.io` public-suffix rejection.
 
+Debugging: adding `?gtm_debug=...`, `?ga_debug=1` or `?debug_mode=1` enables GA4 `debug_mode` and re-opens the
+consent banner, so Tag Assistant/DebugView can test the flow. **It never grants consent** — without an existing
+accepted choice, no Google script is loaded.
+
 ## Local preview
 
 From this directory:

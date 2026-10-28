@@ -10,6 +10,9 @@
   var banner = null;
   var stateEl = null;
   var gaLoaded = false;
+  // Tag Assistant / GTM debug. This only enables GA4 debug output and re-opens the
+  // banner for testing; it is NEVER treated as consent.
+  var debugMode = /[?&](gtm_debug|ga_debug|debug_mode)(=|&|$)/.test(location.search);
 
   var copy = isFr ? {
     title: 'Cookies et mesure d’audience',
@@ -107,6 +110,7 @@
     var isIp = /^[\d.]+$/.test(host) || host.indexOf(':') !== -1;
     var config = { anonymize_ip: true, cookie_expires: 0 };
     if (host && host !== 'localhost' && !isIp) config.cookie_domain = host;
+    if (debugMode) config.debug_mode = true;
     gtag('config', GA_ID, config);
 
     var s = document.createElement('script');
@@ -232,10 +236,12 @@
     var consent = readConsent();
     if (consent && consent.value === 'granted') {
       loadGa();
+      if (debugMode) showBanner(false);
     } else if (!consent) {
       showBanner(false);
     } else {
       updateState('denied');
+      if (debugMode) showBanner(false);
     }
 
     document.addEventListener('click', function (event) {
