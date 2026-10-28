@@ -12,9 +12,12 @@ whose site lives in the `vroid-mcp` repository.
 .
 ├── index.html              English home (default)
 ├── fr/index.html           French home
+├── privacy/index.html      privacy policy (EN)
+├── fr/privacy/index.html   privacy policy (FR)
 ├── 404.html                not-found page
-├── assets/style.css        layout and themes
+├── assets/style.css        layout, themes and consent banner
 ├── assets/app.js           theme toggle + year
+├── assets/js/consent.js    GDPR consent / conditional GA4 loading
 ├── assets/favicon.svg
 ├── assets/img/             project image and localized OG images
 ├── sitemap.xml
@@ -22,7 +25,11 @@ whose site lives in the `vroid-mcp` repository.
 └── .nojekyll
 ```
 
-No build step, no framework, no external font, **no cookie and no analytics** on this site.
+No build step, no framework, no external font. **Google Analytics 4 (`G-2NDE82V29F`) is loaded only after consent**:
+`consent.js` defaults Consent Mode v2 to `denied`, loads `gtag.js` only after **Accept**, and removes the analytics
+cookies on refusal. The choice is stored for 180 days in `localStorage` (`vroid-consent-v1`) and is shared with the
+project site on the same domain. GA4 uses session cookies (`cookie_expires: 0`) and the cookie domain is pinned to
+the current host to avoid the `github.io` public-suffix rejection.
 
 ## Local preview
 
